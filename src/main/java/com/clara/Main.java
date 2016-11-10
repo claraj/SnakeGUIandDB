@@ -5,15 +5,15 @@ import java.sql.*;
 public class Main {
 
     private static String DB_CONNECTION_URL = "jdbc:mysql://localhost:3306/";
-    private static String DB_NAME = "snakes";
-    private static final String USER = "yourname";   //todo change
-    private static final String PASS = "yourpass";      //TODO change to your own login and password!!
+    private static String DB_NAME = "snakes";           //todo create a database called snakes
+    private static final String USER = "yourname";      //todo change to your own username
+    private static final String PASSWORD = "yourpass";      //todo change to your own password
 
     //TODO Grant select, insert, create and drop to your user
     //Execute a command like this in your mysql shell for your own user
-    // grant create, select, insert, drop  on snakes to 'clara'@'localhost'
+    // grant create, select, insert, drop on snakes to 'clara'@'localhost'
 
-    static Connection conn = null;
+    static Connection connection = null;
     static Statement statement = null;
     static ResultSet rs = null;
 
@@ -50,8 +50,9 @@ public class Main {
             return false;
         }
 
-        try {
-            conn = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, USER, PASS);
+        try (Connection conn = DriverManager.getConnection(DB_CONNECTION_URL + DB_NAME, USER, PASSWORD)) {
+            connection = conn;
+
         } catch (SQLException sqle) {
             System.out.println("Can't connect to database. " +
                     "\nIs MySQL running? " +
@@ -74,7 +75,7 @@ public class Main {
             // If you set one argument, you need the other. The second one means you will
             // not be modifying the data in the RowSet (we'll change this later though)
 
-            statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
 
             // Create a table in the database. Using test data that we will delete and re-create every time the app runs
@@ -139,8 +140,8 @@ public class Main {
 
         //And then the connection
         try {
-            if (conn != null) {
-                conn.close();
+            if (connection != null) {
+                connection.close();
                 System.out.println("Database connection closed");
             }
 
