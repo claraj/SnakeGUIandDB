@@ -49,15 +49,17 @@ public class SnakeModel extends AbstractTableModel{
     //The table will call toString on the object, so it's a good idea
     //to return a String or something that implements toString in a useful way
     //In this code, we have varchar (String) and int, so they will display as expected.
-    public String getValueAt(int row, int col) {
+    public Object getValueAt(int row, int col) {
         try {
             //Move to this row in the result set. Rows are numbered 1, 2, 3...
             resultSet.absolute(row + 1);
             //And get the column at this row. Columns numbered 1, 2, 3...
             Object o = resultSet.getObject(col + 1);
-            return o.toString();
+            return o;
         } catch (SQLException sqle) {
-            //Display the text of the error message in the cell
+            // Display the text of the error message in the cell.
+            // Hacky - you wouldn't do this in real code.
+            // Maybe display a blank table, a user-friendly error message, and log the actual error for the developers
             return sqle.toString();
         }
 
